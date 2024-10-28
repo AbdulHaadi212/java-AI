@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RiddleGame {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int score = 0;
+        ArrayList<String> userResponses = new ArrayList<>();
 
         // Define an array of riddles and their corresponding answers.
         String[] riddles = {
@@ -37,10 +39,12 @@ public class RiddleGame {
             System.out.println("Riddle: " + selectedRiddle);
 
             // Get user's answer.
+            System.out.print("Your answer: ");
             String userAnswer = scanner.nextLine();
+            userResponses.add("Riddle: " + selectedRiddle + "\nYour Answer: " + userAnswer);
 
             if (userAnswer.equalsIgnoreCase(correctAnswer)) {
-                System.out.println("Correct!");
+                System.out.println("Correct! You've earned 1 point.");
                 score++;
             } else {
                 // If the answer is incorrect, offer a hint.
@@ -48,6 +52,18 @@ public class RiddleGame {
                 String giveHint = scanner.nextLine().toLowerCase();
                 if (giveHint.equals("yes")) {
                     System.out.println(hint);
+                    score--; // Deduct a point for using a hint
+                    System.out.print("Try again: ");
+                    userAnswer = scanner.nextLine();
+                    userResponses.set(userResponses.size() - 1, "Riddle: " + selectedRiddle + "\nYour Answer: " + userAnswer);
+                    
+                    if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+                        System.out.println("Correct! But with a hint, so no points gained.");
+                    } else {
+                        System.out.println("Still incorrect. The correct answer was: " + correctAnswer);
+                    }
+                } else {
+                    System.out.println("The correct answer was: " + correctAnswer);
                 }
             }
 
@@ -59,8 +75,15 @@ public class RiddleGame {
             }
         }
 
-        // Display final score.
-        System.out.println("Your final score: " + score);
+        // Display final score and summary of riddles with user answers.
+        System.out.println("\nYour final score: " + score);
+        System.out.println("Summary of your answers:");
+        for (String response : userResponses) {
+            System.out.println(response);
+        }
         System.out.println("Thanks for playing!");
+
+        // Close scanner
+        scanner.close();
     }
 }
